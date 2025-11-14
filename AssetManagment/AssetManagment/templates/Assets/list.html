@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assets List</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f8; margin: 0; padding: 24px; }
+        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 32px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07);}
+        h1 { color: #1976d2; margin-bottom: 24px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+        th, td { padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: left; }
+        th { background: #1976d2; color: #fff; }
+        tr:hover { background: #f1f7fd; }
+        .btn { padding: 6px 10px; border: none; background: #1976d2; color: white; cursor: pointer; border-radius: 4px; text-decoration: none; display:inline-block }
+        .btn.secondary { background: #6c757d; }
+        .actions { margin-bottom: 16px; }
+        .row-actions { display:flex; gap:8px; align-items:center }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Assets List</h1>
+        <div class="actions">
+                <a href="{% url 'create_asset' %}" class="btn">Add New Asset</a>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Asset Name</th>
+                    <th>Status</th>
+                    <th style="width:150px">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for asset in assets %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ asset.asset_name }}</td>
+                    <td>
+                        <span class="badge status-{{ asset.asset_status|slugify }}">{{ asset.asset_status|capfirst }}</span>
+                    </td>
+                    <td>
+                        <div class="row-actions">
+                            <a href="{% url 'view_asset' asset.asset_id %}" class="btn" style="font-size:13px;">View</a>
+                            <a href="{% url 'edit_asset' asset.asset_id %}" class="btn secondary" style="font-size:13px;">Edit</a>
+                            <a href="{% url 'delete_asset' asset.asset_id %}" class="btn" style="background:#d32f2f; font-size:13px;">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align:center;">No assets found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    <a href="{% url 'home' %}" class="btn secondary">Back to Home</a>
+    </div>
+</body>
+</html>

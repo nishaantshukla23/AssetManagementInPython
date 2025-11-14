@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Create Asset</title>
+		<style>
+			body { font-family: Arial, sans-serif; margin: 24px; }
+			.container { max-width: 640px; margin: 0 auto; }
+			label { display:block; margin-top:12px; font-weight:600 }
+			input[type="text"], select { width:100%; padding:8px; box-sizing:border-box; margin-top:6px }
+			.actions { margin-top:16px }
+			.btn { padding:8px 14px; border:none; background:#1976d2; color:white; cursor:pointer; border-radius:4px }
+			.btn.secondary { background:#6c757d }
+			.error { color:#b00020; margin-top:6px }
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Create Asset</h1>
+
+			<!-- Simple form that posts to same URL. Update the action if your view expects a different endpoint. -->
+			<form method="post" action="{% url 'create_asset' %}">
+				{% csrf_token %}
+
+				{% if error %}
+				<div class="error">{{ error }}</div>
+				{% endif %}
+
+				<label for="id_name">Asset name</label>
+				<input type="text" id="id_name" name="name" value="{{ request.POST.name|default_if_none:'' }}" placeholder="e.g. Laptop - Dell XPS 13" required />
+
+				<label for="id_description">Description</label>
+				<textarea id="id_description" name="description" placeholder="Optional description" rows="3">{{ request.POST.description|default_if_none:'' }}</textarea>
+
+				<label for="id_purchase_date">Purchase date</label>
+				<input type="date" id="id_purchase_date" name="purchase_date" value="{{ request.POST.purchase_date|default_if_none:'' }}" />
+
+				<label for="id_value">Asset value</label>
+				<input type="number" step="0.01" id="id_value" name="value" value="{{ request.POST.value|default_if_none:'' }}" placeholder="e.g. 1299.99" />
+
+				<label for="id_status">Asset status</label>
+				<select id="id_status" name="status" required>
+					{% comment %} Common statuses; adjust as needed in your view/model {% endcomment %}
+					<option value="">-- choose status --</option>
+					<option value="new" {% if request.POST.status == 'new' %}selected{% endif %}>New</option>
+					<option value="in_use" {% if request.POST.status == 'in_use' %}selected{% endif %}>In use</option>
+					<option value="maintenance" {% if request.POST.status == 'maintenance' %}selected{% endif %}>Maintenance</option>
+					<option value="retired" {% if request.POST.status == 'retired' %}selected{% endif %}>Retired</option>
+				</select>
+
+				<div class="actions">
+					<button type="submit" class="btn">Create asset</button>
+					<a href="{% url 'list_assets' %}" class="btn secondary" style="text-decoration:none; padding:8px 12px; display:inline-block; margin-left:8px">Cancel</a>
+				</div>
+			</form>
+		</div>
+	</body>
+</html>

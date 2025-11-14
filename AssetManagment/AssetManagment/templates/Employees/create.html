@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create Employee</title>
+  <style>
+    body{font-family:Arial;margin:20px}
+    .container{max-width:720px;margin:0 auto}
+    label{display:block;margin-top:10px}
+    input, select{width:100%;padding:8px;margin-top:6px}
+    .actions{margin-top:12px}
+    .btn{padding:8px 12px;background:#1976d2;color:#fff;border:none;border-radius:4px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Create Employee</h1>
+    {% if error %}<div style="color:#b00020">{{ error }}</div>{% endif %}
+    <form method="post" action="{% url 'create_employee' %}">
+      {% csrf_token %}
+      <label>First name</label>
+      <input name="first_name" required />
+      <label>Last name</label>
+      <input name="last_name" />
+      <label>Email</label>
+      <input name="email" type="email" required />
+
+      <label>Assign available assets (optional) — hold Ctrl/Cmd to select multiple</label>
+      <select name="asset_ids" multiple size="6">
+        {% for asset in available_assets %}
+        <option value="{{ asset.asset_id }}">{{ asset.asset_name }} ({{ asset.asset_status }})</option>
+        {% empty %}
+        <option disabled>No available assets</option>
+        {% endfor %}
+      </select>
+
+      <div class="actions">
+        <button class="btn" type="submit">Create employee</button>
+        <a href="{% url 'list_employees' %}" class="btn" style="background:#6c757d;margin-left:8px">Cancel</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

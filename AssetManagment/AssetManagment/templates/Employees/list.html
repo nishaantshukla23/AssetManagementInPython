@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Employees</title>
+<style>
+body{font-family:Arial;margin:20px}
+.container{max-width:900px;margin:0 auto}
+.table{width:100%;border-collapse:collapse}
+th,td{padding:8px;border-bottom:1px solid #eee;text-align:left}
+.btn{padding:6px 10px;background:#1976d2;color:#fff;border-radius:4px;text-decoration:none}
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Employees</h1>
+    <a href="{% url 'create_employee' %}" class="btn">Add Employee</a>
+    <table class="table" style="margin-top:12px">
+      <thead>
+        <tr><th>#</th><th>Name</th><th>Email</th><th>Assets</th></tr>
+      </thead>
+      <tbody>
+        {% for emp in employees %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ emp.first_name }} {{ emp.last_name }}</td>
+          <td>{{ emp.email }}</td>
+          <td>
+            {% for asset in emp.assets.all %}
+              {{ asset.asset_name }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+              -
+            {% endfor %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No employees</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
