@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from .models import Asset
+from .models import Asset, AssetAssignment
 from datetime import date
+from django.utils import timezone
 
 
 # Create your views here.
@@ -101,8 +102,17 @@ def delete_asset(request, asset_id):
     asset = get_object_or_404(Asset, asset_id=asset_id)
     # soft delete: set deleted_at and clear assignment
     asset.deleted_at = date.today()
+    # close any open assignment records
+    AssetAssignment.objects.filter(asset=asset, unassigned_at__isnull=True).update(unassigned_at=timezone.now())
     asset.assigned_to = None
     asset.save()
     return redirect(reverse('list_assets'))
+
+
+def asset_history(request, asset_id):
+    asset = get_object_or_404(Asset, asset_id=asset_id)
+    # include both past and current assignments
+    assignments = asset.assignments.select_related('employee').order_by('-assigned_at')
+    return render(request, 'Assets/history.html', {'asset': asset, 'assignments': assignments})
 
 

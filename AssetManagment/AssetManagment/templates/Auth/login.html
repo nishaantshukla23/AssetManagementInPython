@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <h4>Login</h4>
+    {% if error %}
+      <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input class="form-control" name="username" value="{{ username|default:'' }}" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" name="password" required />
+      </div>
+      <button class="btn btn-primary" type="submit">Login</button>
+      <a class="btn btn-link" href="{% url 'register' %}">Create account</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

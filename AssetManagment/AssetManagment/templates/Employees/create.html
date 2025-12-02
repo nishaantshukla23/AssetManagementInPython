@@ -26,14 +26,7 @@
       <label>Email</label>
       <input name="email" type="email" required />
 
-      <label>Assign available assets (optional) — hold Ctrl/Cmd to select multiple</label>
-      <select name="asset_ids" multiple size="6">
-        {% for asset in available_assets %}
-        <option value="{{ asset.asset_id }}">{{ asset.asset_name }} ({{ asset.asset_status }})</option>
-        {% empty %}
-        <option disabled>No available assets</option>
-        {% endfor %}
-      </select>
+      <p style="color:#555; margin-top:10px">You can assign assets to the employee later from the employees list (Manage Assets).</p>
 
       <div class="actions">
         <button class="btn" type="submit">Create employee</button>

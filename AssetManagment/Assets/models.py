@@ -19,3 +19,23 @@ class Asset(models.Model):
 
     def __str__(self):
         return self.asset_name
+
+
+class AssetAssignment(models.Model):
+    """Historic record of an asset being assigned to an employee.
+
+    - asset: which asset
+    - employee: to whom it was assigned
+    - assigned_at: when assignment happened
+    - unassigned_at: when it ended (null if still assigned)
+    """
+    asset = models.ForeignKey(Asset, on_delete=models.CASCADE, related_name='assignments')
+    employee = models.ForeignKey('Employees.Employee', on_delete=models.CASCADE, related_name='asset_assignments')
+    assigned_at = models.DateTimeField(auto_now_add=True)
+    unassigned_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-assigned_at']
+
+    def __str__(self):
+        return f"{self.asset.asset_name} -> {self.employee} @ {self.assigned_at:%Y-%m-%d %H:%M}"

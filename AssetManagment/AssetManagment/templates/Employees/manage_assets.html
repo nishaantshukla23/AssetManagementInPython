@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage assets — {{ employee.first_name }} {{ employee.last_name }}{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-body">
+      <h4>Assign asset to: {{ employee.first_name }} {{ employee.last_name }}</h4>
+      {% if error %}
+      <div class="alert alert-danger">{{ error }}</div>
+      {% endif %}
+
+      {% if assets %}
+      <table class="table mt-3">
+        <thead><tr><th>#</th><th>Name</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+        {% for a in assets %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ a.asset_name }}</td>
+            <td>{{ a.asset_status }}</td>
+            <td>
+              <form method="post" action="{% url 'manage_assets' employee.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="asset_id" value="{{ a.asset_id }}" />
+                <button type="submit" class="btn btn-primary btn-sm">Assign</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <div class="text-muted mt-3">No available assets to assign.</div>
+      {% endif %}
+
+      <a class="btn btn-secondary mt-3" href="{% url 'list_employees' %}">Back to employees</a>
+    </div>
+  </div>
+{% endblock %}

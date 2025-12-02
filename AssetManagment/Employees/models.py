@@ -7,6 +7,7 @@ class Employee(models.Model):
 	last_name = models.CharField(max_length=80, blank=True)
 	email = models.EmailField(unique=True)
 	created_at = models.DateTimeField(auto_now_add=True)
+	deleted_at = models.DateTimeField(null=True, blank=True)
 
 	def __str__(self):
 		return f"{self.first_name} {self.last_name}" if self.last_name else self.first_name

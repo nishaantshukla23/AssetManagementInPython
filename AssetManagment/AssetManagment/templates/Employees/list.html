@@ -9,6 +9,14 @@ body{font-family:Arial;margin:20px}
 .table{width:100%;border-collapse:collapse}
 th,td{padding:8px;border-bottom:1px solid #eee;text-align:left}
 .btn{padding:6px 10px;background:#1976d2;color:#fff;border-radius:4px;text-decoration:none}
+.btn.small{padding:4px 8px;font-size:13px}
+.badge{display:inline-block;padding:4px 8px;border-radius:12px;background:#e8f0ff;color:#0b4971;margin-right:6px}
+.manage-btn{background:#1976d2}
+.modal{position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center}
+.modal .panel{background:#fff;padding:18px;border-radius:8px;max-width:720px;width:90%;max-height:80vh;overflow:auto}
+.assets-list{margin-top:12px}
+.asset-row{display:flex;justify-content:space-between;padding:8px 6px;border-bottom:1px solid #eee}
+.search-input{width:100%;padding:8px;border:1px solid #ddd;border-radius:4px}
 </style>
 </head>
 <body>
@@ -17,27 +25,37 @@ th,td{padding:8px;border-bottom:1px solid #eee;text-align:left}
     <a href="{% url 'create_employee' %}" class="btn">Add Employee</a>
     <table class="table" style="margin-top:12px">
       <thead>
-        <tr><th>#</th><th>Name</th><th>Email</th><th>Assets</th></tr>
+        <tr><th>#</th><th>Name</th><th>Email</th><th>Assets</th><th>Actions</th></tr>
       </thead>
       <tbody>
         {% for emp in employees %}
-        <tr>
+        <tr id="emp-row-{{ emp.id }}">
           <td>{{ forloop.counter }}</td>
           <td>{{ emp.first_name }} {{ emp.last_name }}</td>
           <td>{{ emp.email }}</td>
-          <td>
+          <td id="emp-assets-{{ emp.id }}">
             {% for asset in emp.assets.all %}
-              {{ asset.asset_name }}{% if not forloop.last %}, {% endif %}
+              <span class="badge">{{ asset.asset_name }}</span>
             {% empty %}
               -
             {% endfor %}
           </td>
+          <td>
+            <a href="{% url 'manage_assets' emp.id %}" class="btn small manage-btn">Manage Assets</a>
+            <a href="{% url 'employee_history' emp.id %}" class="btn small" style="margin-left:8px;background:#6b5cff">History</a>
+            <form method="post" action="{% url 'delete_employee' emp.id %}" style="display:inline;margin-left:8px">
+              {% csrf_token %}
+              <button type="submit" class="btn small" style="background:#d32f2f">Delete</button>
+            </form>
+          </td>
         </tr>
         {% empty %}
-        <tr><td colspan="4">No employees</td></tr>
+        <tr><td colspan="5">No employees</td></tr>
         {% endfor %}
       </tbody>
     </table>
+
+    
   </div>
 </body>
 </html>
